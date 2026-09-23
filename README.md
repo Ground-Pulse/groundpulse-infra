@@ -1,38 +1,41 @@
 ### 5. `groundpulse-infra`
 
 ```markdown
-# groundpulse-infra
+# GroundPulse Local Environment & Infrastructure (`groundpulse-infra`)
 
-Infrastructure, Docker orchestration, and deployment automation for GroundPulse[cite: 1].
+Container configurations, local datastore orchestration, deployment task definitions, and shared environment templates for GroundPulse.
 
 ---
 
-## 🎯 Purpose of This Repo
-This repository manages all container orchestration, local infrastructure definitions, CI/CD pipeline configuration, and cloud deployment templates for the GroundPulse platform[cite: 1].
+## 📌 Work of This Repo
+This repository configures and maintains the runtime infrastructure:
+- Orchestrates local PostgreSQL 15 and Redis 7 containers via Docker Compose.
+- Maintains `.env.example` templates for all backend and frontend microrepositories.
+- Stores AWS ECS/Fargate task definitions, Amazon ECR Docker build specifications, and CloudFront/S3 configuration scripts.
+- Contains root end-to-end integration and Playwright test orchestrations.
 
 ## ❓ Why We Created This Repo
-With applications separated into micro-repositories, having a central infrastructure repository guarantees that:
-- Developers can spin up all required dependencies (PostgreSQL 15 and Redis 7) locally with a single command[cite: 1].
-- Production deployment templates (AWS ECS task definitions, ECR build scripts, and Vercel project configurations) remain version-controlled in one place[cite: 1].
-- End-to-end multi-role test suites (Playwright) can test across the API and client applications together[cite: 1].
+With services and dashboards split across microrepositories, developers need a single location to spin up supporting backing services (databases, Redis queues, local mock stores) without duplicating container configurations inside every repository.
 
-## 📂 File Structure
+## 🛠 Tech Stack
+- **Containerization:** Docker / Docker Compose
+- **Datastores:** PostgreSQL 15, Redis 7
+- **Cloud Infrastructure:** AWS ECS Fargate, AWS S3, CloudFront CDN
+- **E2E Automation:** Playwright
+
+## 📁 File Structure
 ```text
 groundpulse-infra/
 ├── docker/
-│   ├── docker-compose.local.yml       # Local PostgreSQL 15 & Redis 7 containers
-│   └── docker-compose.test.yml        # Ephemeral containers for integration suites
-├── e2e/                               # Cross-repo Playwright E2E tests
-│   ├── owner-flow.spec.ts             # Register -> Schedule -> Approve repair
-│   ├── inspector-flow.spec.ts         # Complete checklist -> Submit report
-│   └── admin-provider-flow.spec.ts    # Assign provider -> Complete job
-├── terraform/                         # (Optional) AWS ECS, RDS, and S3 provisioning
-│   ├── main.tf
-│   ├── variables.tf
-│   └── outputs.tf
-├── scripts/
-│   ├── dev-setup.sh                   # Clones and installs all 4 sister repos
-│   └── run-all-tests.sh               # Runs test suites across all components
+│   └── docker-compose.yml
+├── env/
+│   ├── .env.api.example
+│   ├── .env.owner.example
+│   └── .env.ops.example
+├── e2e/
+│   ├── owner-flow.spec.ts
+│   ├── inspector-flow.spec.ts
+│   └── provider-flow.spec.ts
 ├── playwright.config.ts
 ├── package.json
 └── README.md
